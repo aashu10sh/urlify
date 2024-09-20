@@ -4,18 +4,18 @@
 </script>
 
 <div class="app">
-	<Header />
+	<!-- <Header></Header> -->
 
 	<main>
-		<slot />
+		<slot></slot>
 	</main>
 
-	<footer>
+	<!-- <footer>
 		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
+	</footer> -->
 </div>
 
-<style>
+<!-- <style>
 	.app {
 		display: flex;
 		flex-direction: column;
@@ -50,4 +50,4 @@
 			padding: 12px 0;
 		}
 	}
-</style>
+</style> -->
