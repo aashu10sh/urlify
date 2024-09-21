@@ -1,4 +1,3 @@
-import prisma from "../../../core/db/db";
 import { UserModel } from "../../../core/domain/entities/user.model";
 import UserRepository from "../../../users/domain/repositories/userRepository";
 

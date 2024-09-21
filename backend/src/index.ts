@@ -9,9 +9,11 @@ const port = 3000;
 const app = new Hono().basePath("/api/v1");
 app.use(logger());
 
+
 app.get("/", (c) => {
-  return c.text("Hello Hono!");
+  return c.text("Hello Boys!");
 });
+
 
 app.route("/auth", authRouter);
 
