@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 	import { Button } from '@/components/ui/button';
 	import {
 		Card,
@@ -11,7 +12,6 @@
 	} from '@/components/ui/card';
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
-	import { redirect } from '@sveltejs/kit';
 
 	let username: string = '';
 	let name: string = '';
@@ -56,7 +56,7 @@
 						class="w-full"
 						variant="outline"
 						on:click={() => {
-							window.location.href = '/login';
+							window.location.href = "/login"
 						}}
 					>
 						Login Instead

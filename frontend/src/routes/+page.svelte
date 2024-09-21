@@ -19,7 +19,7 @@
 					<p class="">URLify</p>
 					<div class="mt-5 max-w-2xl">
 						<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-							Cleaner, Better and Concise Links
+							Sleek links for smarter business	
 						</h1>
 					</div>
 					<div class="mt-5 max-w-3xl">
@@ -28,8 +28,19 @@
 						</p>
 					</div>
 					<div class="mt-8 flex justify-center gap-3">
-						<Button size={'lg'} on:click={() => {goto("/register")}}>Create an Account</Button>
-						<Button size={'lg'} variant={'outline'} on:click={() => {goto("/dashboard")}}>Dashboard</Button>
+						<Button
+							size={'lg'}
+							on:click={() => {
+								goto('/register');
+							}}>Create an Account</Button
+						>
+						<Button
+							size={'lg'}
+							variant={'outline'}
+							on:click={() => {
+								goto('/dashboard');
+							}}>Dashboard</Button
+						>
 					</div>
 				</div>
 			</div>

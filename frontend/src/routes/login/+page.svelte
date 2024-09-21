@@ -10,6 +10,7 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
+	import { goto } from '$app/navigation';
 </script>
 
 <section>
@@ -31,8 +32,15 @@
 					<Input id="password" type="password" placeholder="Enter your password" required />
 				</div>
 			</CardContent>
-			<CardFooter>
-				<Button class="w-full">Sign In</Button>
+			<CardFooter class="flex flex-col gap-5">
+				<Button class="w-full">Log In</Button>
+				<Button
+					class="w-full "
+					variant="secondary"
+					on:click={() => {
+						window.location.href = "/register"
+					}}>Register Instead</Button
+				>
 			</CardFooter>
 		</Card>
 	</div>
