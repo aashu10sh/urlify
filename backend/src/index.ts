@@ -1,16 +1,21 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import authRouter from "./modules/auth/router/authRouter";
+import { logger } from "hono/logger";
 
-const app = new Hono()
+const port = 3000;
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = new Hono().basePath("/api/v1");
+app.use(logger());
 
-const port = 3000
-console.log(`Server is running on port ${port}`)
+app.get("/", (c) => {
+  return c.text("Hello Hono!");
+});
 
+app.route("/auth", authRouter);
+
+console.log(`Server is running on port ${port}`);
 serve({
   fetch: app.fetch,
-  port
-})
+  port,
+});

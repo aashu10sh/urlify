@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_ROOT: root
+      POSTGRES_DB: urlify
+      POSTGRES_USER: urlify
+      POSTGRES_PASSWORD: barcelonaovermadrid
+    volumes:
+      - db_data:/var/lib/postgresql/urlify
+
+volumes:
+  db_data:
