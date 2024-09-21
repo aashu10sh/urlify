@@ -4,6 +4,7 @@ import loginValidator from "../domain/entities/request/loginRequest";
 import UserRepository from "../../users/domain/repositories/userRepository";
 import AuthController from "../presentation/controllers/authController";
 import { HTTPException } from "hono/http-exception";
+import { getCurrentUser } from "../middlewares/getCurrentUser";
 
 const authRouter = new Hono();
 const userRepository = new UserRepository();
@@ -43,6 +44,15 @@ authRouter.post("/login", loginValidator, async (c) => {
   const token = loginResult.val;
   return c.json({
     token: token,
+  });
+});
+
+authRouter.post("/valid", getCurrentUser, async (c) => {
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  const user = c.get("user");
+  return c.json({
+    valid: true,
   });
 });
 

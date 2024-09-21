@@ -2,9 +2,9 @@ import UserRepository from "../../../users/domain/repositories/userRepository";
 import { createUser } from "../../domain/usecases/createUser";
 import { getUserByUsername } from "../../domain/usecases/getUser";
 import { Ok, Err, Result } from "ts-results";
-import jwt from "jsonwebtoken";
 import { ErrorResponse } from "../../../core/domain/entities/error.response";
 import { comparePassword } from "../../utils/passwordUtils";
+import { generateJWT } from "../../utils/authUtils";
 
 class AuthController {
   constructor(readonly userRepository: UserRepository) {}
@@ -27,7 +27,7 @@ class AuthController {
       username,
       password,
     );
-    const token = await this.generateJWT(newUser.id!);
+    const token = await generateJWT(newUser.id!);
     return Ok(token);
   }
 
@@ -44,25 +44,13 @@ class AuthController {
       });
     }
     if (await comparePassword(password, userInDb.password!)) {
-      return Ok(await this.generateJWT(userInDb.id!));
+      return Ok(await generateJWT(userInDb.id!));
     }
     return Err({
       statusCode: 401,
       message: "Invalid Credentials!",
       fields: ["username", "password"],
     });
-  }
-
-  async generateJWT(username: string): Promise<string> {
-    return jwt.sign(
-      {
-        jid: username,
-      },
-      process.env.SECRET!,
-      {
-        expiresIn: "1d",
-      },
-    );
   }
 }
 
