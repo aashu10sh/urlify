@@ -6,11 +6,7 @@ export async function getUserById(
   repository: UserRepository,
   id: string,
 ): Promise<UserModel | null> {
-  return await prisma.user.findFirst({
-    where: {
-      id: id,
-    },
-  });
+  return await repository.findOne(new UserModel({ id:id})); 
 }
 
 export async function getUserByUsername(
