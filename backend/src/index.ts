@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import authRouter from "./modules/auth/router/authRouter";
 import { logger } from "hono/logger";
+require("dotenv").config();
 
 const port = 3000;
 

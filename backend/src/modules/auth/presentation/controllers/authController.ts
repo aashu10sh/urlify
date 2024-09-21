@@ -1,12 +1,12 @@
 import UserRepository from "../../../users/domain/repositories/userRepository";
 import { createUser } from "../../domain/usecases/createUser";
-import { getUserById, getUserByUsername } from "../../domain/usecases/getUser";
+import { getUserByUsername } from "../../domain/usecases/getUser";
 import { Ok, Err, Result } from "ts-results";
 import jwt from "jsonwebtoken";
 import { ErrorResponse } from "../../../core/domain/entities/error.response";
+import { comparePassword } from "../../utils/passwordUtils";
 
 class AuthController {
-  SECRET: string = "YESIR";
   constructor(readonly userRepository: UserRepository) {}
   async registerUser(
     name: string,
@@ -28,8 +28,29 @@ class AuthController {
       password,
     );
     const token = await this.generateJWT(newUser.id!);
-
     return Ok(token);
+  }
+
+  async loginUser(
+    username: string,
+    password: string,
+  ): Promise<Result<string, ErrorResponse>> {
+    const userInDb = await getUserByUsername(this.userRepository, username);
+    if (!userInDb) {
+      return Err({
+        statusCode: 401,
+        message: "Invalid Username or Password",
+        fields: ["username", "password"],
+      });
+    }
+    if (await comparePassword(password, userInDb.password!)) {
+      return Ok(await this.generateJWT(userInDb.id!));
+    }
+    return Err({
+      statusCode: 401,
+      message: "Invalid Credentials!",
+      fields: ["username", "password"],
+    });
   }
 
   async generateJWT(username: string): Promise<string> {
@@ -37,7 +58,7 @@ class AuthController {
       {
         jid: username,
       },
-      this.SECRET,
+      process.env.SECRET!,
       {
         expiresIn: "1d",
       },

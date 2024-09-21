@@ -29,7 +29,9 @@ class UserRepository implements Repository<UserModel> {
     return new UserModel(deletedUser);
   }
 
-  async findOne(conditions: Partial<UserModel>): Promise<UserModel | null> {
+  async findOne(
+    conditions: Partial<UserModel>,
+  ): Promise<UserModelWithPassword | null> {
     const user = await prisma.user.findFirst({
       where: {
         id: conditions.id,
@@ -38,7 +40,7 @@ class UserRepository implements Repository<UserModel> {
         deleted: conditions.deleted ?? false,
       },
     });
-    return user ? new UserModel(user) : null;
+    return user ? new UserModelWithPassword(user) : null;
   }
 
   async findMany(

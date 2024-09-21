@@ -28,8 +28,22 @@ authRouter.post("/register", registerValidator, async (c) => {
   });
 });
 
-authRouter.post("/login", loginValidator, (c) => {
-  return c.text("yes");
+authRouter.post("/login", loginValidator, async (c) => {
+  const validated = c.req.valid("json");
+  const loginResult = await authController.loginUser(
+    validated.username,
+    validated.password,
+  );
+  if (loginResult.err) {
+    throw new HTTPException(loginResult.val.statusCode, {
+      message: loginResult.val.message,
+      cause: loginResult.val.fields,
+    });
+  }
+  const token = loginResult.val;
+  return c.json({
+    token: token,
+  });
 });
 
 export default authRouter;
