@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { Button } from '@/components/ui/button';
-	import { toast } from "svelte-sonner";
+	import { toast } from 'svelte-sonner';
 	import {
 		Card,
 		CardContent,
@@ -21,41 +20,39 @@
 
 	onMount(async () => {
 		const hasSession = await AuthController.validate();
-		if(hasSession){
-			window.location.href = "/dashboard"
+		if (hasSession) {
+			window.location.href = '/dashboard';
 		}
-	})
+	});
 
 	async function registerUser() {
 		const controller = new AuthController();
 		const registerResult = await controller.register(name, username, password);
-		
+
 		registerResult.match(
 			async (token) => {
 				console.log('Registration successful. Token:', token);
 				// Handle successful registration (e.g., save token, redirect)
 				await controller.saveToken(token);
-				toast.success(
-					"Registered!, Redirecting!"
-				)
+				toast.success('Registered!, Redirecting!');
 
-				window.location.href = "/dashboard";
+				window.location.href = '/dashboard';
 			},
 			(error) => {
-				
-				toast.error(
-					"Unable to Register",
-					{
-						description: error,
-					}
-				);
+				toast.error('Unable to Register', {
+					description: error
+				});
 			}
 		);
 	}
 </script>
 
-<section>
-	<form on:submit|preventDefault={registerUser} >
+<svelte:head>
+	<title>Register to URLify</title>
+</svelte:head>
+
+<main>
+	<form on:submit|preventDefault={registerUser}>
 		<div class="flex min-h-screen items-center justify-center bg-background">
 			<Card class="w-full max-w-sm">
 				<CardHeader>
@@ -97,4 +94,4 @@
 			</Card>
 		</div>
 	</form>
-</section>
+</main>
