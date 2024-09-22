@@ -24,6 +24,8 @@ linkRouter.post("/", getCurrentUser, linkCreationValidator, async (c) => {
     validated.newUrl,
     user.id!,
   );
+//   console.log(creationResult)
+
 
   if (creationResult.err) {
     throw new HTTPException(creationResult.val.statusCode, {
@@ -31,7 +33,7 @@ linkRouter.post("/", getCurrentUser, linkCreationValidator, async (c) => {
       cause: creationResult.val.fields,
     });
   }
-  return c.status(201)
+  return c.json({created:true, data:creationResult.val})
 });
 
 // linkRouter.get('/', getCurrentUser,)
