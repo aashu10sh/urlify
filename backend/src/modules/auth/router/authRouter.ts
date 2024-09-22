@@ -51,7 +51,7 @@ authRouter.post("/login", loginValidator, async (c) => {
 authRouter.post("/valid", getCurrentUser, async (c) => {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const user  : UserModel = c.get("user");
+  const user: UserModel = c.get("user");
 
   return c.json({
     valid: true,

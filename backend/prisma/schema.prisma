@@ -32,7 +32,7 @@ model Links{
   userId String
   user Users @relation(fields: [userId],references: [id])
   originalUrl String
-  slug String 
+  slug String @unique
   newUrl String
   hits Hits[]
   deleted Boolean @default(false)

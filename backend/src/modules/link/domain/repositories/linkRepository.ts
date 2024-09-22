@@ -1,18 +1,15 @@
-
 import prisma from "../../../core/db/db";
 import { LinkModel } from "../../../core/domain/entities/link.model";
-
 
 class LinkRepository implements Repository<LinkModel> {
   async create(instance: LinkModel): Promise<LinkModel> {
     const createdLink = await prisma.links.create({
       data: {
-
         name: instance.name!,
         newUrl: instance.newUrl!,
         originalUrl: instance.originalUrl!,
         slug: instance.slug!,
-        userId: instance.userId!
+        userId: instance.userId!,
       },
     });
     return new LinkModel(createdLink);
@@ -27,9 +24,7 @@ class LinkRepository implements Repository<LinkModel> {
     return new LinkModel(deletedLink);
   }
 
-  async findOne(
-    conditions: Partial<LinkModel>,
-  ): Promise<LinkModel | null> {
+  async findOne(conditions: Partial<LinkModel>): Promise<LinkModel | null> {
     const link = await prisma.links.findFirst({
       where: {
         id: conditions.id,
