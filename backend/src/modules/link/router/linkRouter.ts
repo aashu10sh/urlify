@@ -47,7 +47,7 @@ linkRouter.get("/", getCurrentUser, validateDefaultQueryParams, async (c) => {
     validated.page,
     validated.limit,
   );
-  return c.json({ data:fetchLinksResult });
+  return c.json({ data: fetchLinksResult });
 });
 
 export default linkRouter;
