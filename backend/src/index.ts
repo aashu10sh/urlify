@@ -15,7 +15,7 @@ app.get("/", (c) => {
 });
 
 app.route("/auth", authRouter);
-app.route('/link', linkRouter);
+app.route("/link", linkRouter);
 
 console.log(`Server is running on port ${port}`);
 serve({

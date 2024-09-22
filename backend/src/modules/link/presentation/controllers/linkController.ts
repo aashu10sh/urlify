@@ -2,7 +2,7 @@ import { Err, Ok, Result } from "ts-results";
 import LinkRepository from "../../domain/repositories/linkRepository";
 import { LinkModel } from "../../../core/domain/entities/link.model";
 import { ErrorResponse } from "../../../core/domain/entities/error.response";
-import { getLinkBySlug } from "../../domain/usecases/getLink";
+import { getLinkBySlug, getLinksByUser } from "../../domain/usecases/getLink";
 import { createLink } from "../../domain/usecases/createLink";
 
 class LinkController {
@@ -29,6 +29,14 @@ class LinkController {
     );
 
     return Ok(created);
+  }
+  async fetchLinks(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<Array<LinkModel>> {
+    const offset = (page - 1) * limit;
+    return await getLinksByUser(this.linkRepository, userId, offset, limit);
   }
 }
 

@@ -5,6 +5,7 @@ import LinkController from "../presentation/controllers/linkController";
 import linkCreationValidator from "../domain/entities/requests/createLinkRequest";
 import { UserModel } from "../../core/domain/entities/user.model";
 import { HTTPException } from "hono/http-exception";
+import validateDefaultQueryParams from "../../core/domain/entities/requests/defaultQueryParams";
 
 const linkRouter = new Hono();
 const linkRepository = new LinkRepository();
@@ -24,8 +25,6 @@ linkRouter.post("/", getCurrentUser, linkCreationValidator, async (c) => {
     validated.newUrl,
     user.id!,
   );
-//   console.log(creationResult)
-
 
   if (creationResult.err) {
     throw new HTTPException(creationResult.val.statusCode, {
@@ -33,9 +32,22 @@ linkRouter.post("/", getCurrentUser, linkCreationValidator, async (c) => {
       cause: creationResult.val.fields,
     });
   }
-  return c.json({created:true, data:creationResult.val})
+  return c.json({ created: true, data: creationResult.val });
 });
 
-// linkRouter.get('/', getCurrentUser,)
+linkRouter.get("/", getCurrentUser, validateDefaultQueryParams, async (c) => {
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  const user: UserModel = c.get("user");
 
-export default linkRouter
+  const validated = c.req.valid("query");
+
+  const fetchLinksResult = await linkController.fetchLinks(
+    user.id!,
+    validated.page,
+    validated.limit,
+  );
+  return c.json({ data:fetchLinksResult });
+});
+
+export default linkRouter;
