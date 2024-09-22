@@ -19,7 +19,7 @@
 					<p class="">URLify</p>
 					<div class="mt-5 max-w-2xl">
 						<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-							Sleek links for smarter business	
+							Sleek links for smarter business
 						</h1>
 					</div>
 					<div class="mt-5 max-w-3xl">

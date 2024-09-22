@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
 	import { Button } from '@/components/ui/button';
+	import { toast } from "svelte-sonner";
 	import {
 		Card,
 		CardContent,
@@ -12,18 +12,50 @@
 	} from '@/components/ui/card';
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
+	import AuthController from '@/controllers/authController';
+	import { onMount } from 'svelte';
 
 	let username: string = '';
 	let name: string = '';
 	let password: string = '';
 
+	onMount(async () => {
+		const hasSession = await AuthController.validate();
+		if(hasSession){
+			window.location.href = "/dashboard"
+		}
+	})
+
 	async function registerUser() {
-		console.log('Submitting Data: ', name, username, password);
+		const controller = new AuthController();
+		const registerResult = await controller.register(name, username, password);
+		
+		registerResult.match(
+			async (token) => {
+				console.log('Registration successful. Token:', token);
+				// Handle successful registration (e.g., save token, redirect)
+				await controller.saveToken(token);
+				toast.success(
+					"Registered!, Redirecting!"
+				)
+
+				window.location.href = "/dashboard";
+			},
+			(error) => {
+				
+				toast.error(
+					"Unable to Register",
+					{
+						description: error,
+					}
+				);
+			}
+		);
 	}
 </script>
 
 <section>
-	<form on:submit|preventDefault={registerUser} use:enhance method="post">
+	<form on:submit|preventDefault={registerUser} >
 		<div class="flex min-h-screen items-center justify-center bg-background">
 			<Card class="w-full max-w-sm">
 				<CardHeader>
@@ -56,7 +88,7 @@
 						class="w-full"
 						variant="outline"
 						on:click={() => {
-							window.location.href = "/login"
+							window.location.href = '/login';
 						}}
 					>
 						Login Instead
