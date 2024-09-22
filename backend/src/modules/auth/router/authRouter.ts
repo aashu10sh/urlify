@@ -5,6 +5,7 @@ import UserRepository from "../../users/domain/repositories/userRepository";
 import AuthController from "../presentation/controllers/authController";
 import { HTTPException } from "hono/http-exception";
 import { getCurrentUser } from "../middlewares/getCurrentUser";
+import { UserModel } from "../../core/domain/entities/user.model";
 
 const authRouter = new Hono();
 const userRepository = new UserRepository();
@@ -50,7 +51,8 @@ authRouter.post("/login", loginValidator, async (c) => {
 authRouter.post("/valid", getCurrentUser, async (c) => {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const user = c.get("user");
+  const user  : UserModel = c.get("user");
+
   return c.json({
     valid: true,
   });

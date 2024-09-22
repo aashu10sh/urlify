@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users{
   id                     String              @id @default(cuid())
   name  String 
   username String @unique
@@ -22,4 +22,25 @@ model User {
   createdAt              DateTime            @default(now())
   updatedAt              DateTime            @updatedAt
   deleted Boolean @default(false)
+  links Links[]
+}
+
+
+model Links{
+  id Int @id @default(autoincrement())
+  name String
+  userId String
+  user Users @relation(fields: [userId],references: [id])
+  originalUrl String
+  slug String 
+  newUrl String
+  hits Hits[]
+  deleted Boolean @default(false)
+}
+
+model Hits{
+  id Int @id @default(autoincrement())
+  linkId Int 
+  link Links @relation(fields: [linkId], references: [id])
+  accessedAt DateTime @default(now())
 }

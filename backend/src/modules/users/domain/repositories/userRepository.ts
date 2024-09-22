@@ -6,7 +6,7 @@ import {
 
 class UserRepository implements Repository<UserModel> {
   async create(instance: UserModelWithPassword): Promise<UserModel> {
-    const createdUser = await prisma.user.create({
+    const createdUser = await prisma.users.create({
       data: {
         name: instance.name!,
         username: instance.username!,
@@ -21,7 +21,7 @@ class UserRepository implements Repository<UserModel> {
   }
 
   async delete(instance: UserModel): Promise<UserModel> {
-    const deletedUser = await prisma.user.update({
+    const deletedUser = await prisma.users.update({
       where: { id: instance.id },
       data: { deleted: true },
     });
@@ -32,7 +32,7 @@ class UserRepository implements Repository<UserModel> {
   async findOne(
     conditions: Partial<UserModel>,
   ): Promise<UserModelWithPassword | null> {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
         id: conditions.id,
         name: conditions.name,
@@ -48,7 +48,7 @@ class UserRepository implements Repository<UserModel> {
     offset: number,
     limit: number,
   ): Promise<UserModel[]> {
-    const users = await prisma.user.findMany({
+    const users = await prisma.users.findMany({
       skip: offset,
       take: limit,
       where: {
@@ -63,7 +63,7 @@ class UserRepository implements Repository<UserModel> {
   }
 
   async update(instance: UserModel): Promise<UserModel> {
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await prisma.users.update({
       where: { id: instance.id },
       data: {
         name: instance.name,
