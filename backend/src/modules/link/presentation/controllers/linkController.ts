@@ -38,6 +38,11 @@ class LinkController {
     const offset = (page - 1) * limit;
     return await getLinksByUser(this.linkRepository, userId, offset, limit);
   }
+
+  async fetchLink( slug : string) : Promise<LinkModel|null>{
+    return await getLinkBySlug(this.linkRepository, slug);
+    
+  }
 }
 
 export default LinkController;

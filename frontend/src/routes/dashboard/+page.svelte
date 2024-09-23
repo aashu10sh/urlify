@@ -6,8 +6,6 @@
 	import UserNav from '@/components/custom/userNav.svelte';
 	import AddDrawer from '@/components/custom/drawer/addDrawer.svelte';
 	import DataTable from '@/components/custom/table/DataTable.svelte';
-	import Button from '@/components/ui/button/button.svelte';
-	import { CirclePlusIcon } from 'lucide-svelte';
 
 	const controller = new AuthController();
 	export let data: PageData;
@@ -18,6 +16,7 @@
 	}
 
 	const user = data.user!;
+	const links = data.links!;
 
 	let token: string;
 
@@ -47,10 +46,6 @@
 			<UserNav {user} />
 		</div>
 	</div>
-	<!-- <Button class='' variant='outline' > -->
 	<AddDrawer />
-	<!-- <CirclePlusIcon class='mr-2 h-4 w-4'/>   -->
-	<!-- Add a New Link -->
-	<!-- </Button> -->
-	<DataTable />
+	<DataTable data={links}/>
 </div>

@@ -50,6 +50,25 @@ class LinkController {
         console.table(final)
         return final;
     }
+    static async getLinkBySlug(slug: string) : Promise<ILink|null>{ 
+        const response = await fetch(`${API_URL}/link/${slug}`,{
+            method:'GET',
+
+        })
+        if(!response.ok){
+            return null;
+        }
+
+        const data = await response.json();
+        return { 
+            id: data["id"],
+            name: data["name"],
+            newUrl : data["newUrl"],
+            originalUrl: data["originalUrl"],
+            slug : data["slug"]
+        } satisfies ILink;
+
+    } 
 }
 
 export default LinkController;

@@ -15,58 +15,28 @@
 	import Actions from './data-table-actions.svelte';
 
 	import DataTableCheckbox from './data-table-checkbox.svelte';
-	// import DataTableCheckbox from "$lib/components/ui/table/table-"
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { cn } from '$lib/utils.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 
-	type Payment = {
-		id: string;
-		amount: number;
-		status: 'Pending' | 'Processing' | 'Success' | 'Failed';
-		email: string;
-	};
+    export let data : ILink[];
 
-	const data: Payment[] = [
-		{
-			id: 'm5gr84i9',
-			amount: 316,
-			status: 'Success',
-			email: 'ken99@yahoo.com'
-		},
-		{
-			id: '3u1reuv4',
-			amount: 242,
-			status: 'Success',
-			email: 'Abe45@gmail.com'
-		},
-		{
-			id: 'derv1ws0',
-			amount: 837,
-			status: 'Processing',
-			email: 'Monserrat44@gmail.com'
-		},
-		{
-			id: '5kma53ae',
-			amount: 874,
-			status: 'Success',
-			email: 'Silas22@gmail.com'
-		},
-		{
-			id: 'bhqecj4p',
-			amount: 721,
-			status: 'Failed',
-			email: 'carmella@hotmail.com'
-		}
-	];
+	interface ILink {
+		id: number;
+		name: string;
+		originalUrl: string;
+		newUrl: string;
+		slug: string;
+	}
+
 
 	const table = createTable(readable(data), {
 		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
-			fn: ({ filterValue, value }) => value.includes(filterValue)
+			fn: ({ filterValue, value }) => value.toLowerCase().includes(filterValue.toLowerCase())
 		}),
 		select: addSelectedRows(),
 		hide: addHiddenColumns()
@@ -99,46 +69,42 @@
 			}
 		}),
 		table.column({
-			header: 'Status',
-			accessor: 'status',
-			plugins: { sort: { disable: true }, filter: { exclude: true } }
-		}),
-		table.column({
-			header: 'Email',
-			accessor: 'email',
-			cell: ({ value }) => value.toLowerCase(),
+			header: 'Name',
+			accessor: 'name',
 			plugins: {
-				filter: {
-					getFilterValue(value) {
-						return value.toLowerCase();
-					}
-				}
+				sort: { disable: false },
+				filter: { exclude: false }
 			}
 		}),
 		table.column({
-			header: 'Amount',
-			accessor: 'amount',
-			cell: ({ value }) => {
-				const formatted = new Intl.NumberFormat('en-US', {
-					style: 'currency',
-					currency: 'USD'
-				}).format(value);
-				return formatted;
-			},
+			header: 'Original URL',
+			accessor: 'originalUrl',
 			plugins: {
-				sort: {
-					disable: true
-				},
-				filter: {
-					exclude: true
-				}
+				sort: { disable: false },
+				filter: { exclude: false }
+			}
+		}),
+		table.column({
+			header: 'New URL',
+			accessor: 'newUrl',
+			plugins: {
+				sort: { disable: false },
+				filter: { exclude: false }
+			}
+		}),
+		table.column({
+			header: 'Slug',
+			accessor: 'slug',
+			plugins: {
+				sort: { disable: false },
+				filter: { exclude: false }
 			}
 		}),
 		table.column({
 			header: '',
 			accessor: ({ id }) => id,
 			cell: (item) => {
-				return createRender(Actions, { id: item.value });
+				return createRender(Actions, { id: String(item.value) });
 			},
 			plugins: {
 				sort: {
@@ -166,12 +132,12 @@
 
 	const { selectedDataIds } = pluginStates.select;
 
-	const hideableCols = ['status', 'email', 'amount'];
+	const hideableCols = ['name', 'originalUrl', 'newUrl', 'slug'];
 </script>
 
 <div class="w-full">
 	<div class="flex items-center py-4">
-		<Input class="max-w-sm" placeholder="Filter emails..." type="text" bind:value={$filterValue} />
+		<Input class="max-w-sm" placeholder="Filter links..." type="text" bind:value={$filterValue} />
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild let:builder>
 				<Button variant="outline" class="ml-auto" builders={[builder]}>
@@ -198,11 +164,7 @@
 							{#each headerRow.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
 									<Table.Head {...attrs} class={cn('[&:has([role=checkbox])]:pl-3')}>
-										{#if cell.id === 'amount'}
-											<div class="text-right font-medium">
-												<Render of={cell.render()} />
-											</div>
-										{:else if cell.id === 'email'}
+										{#if cell.id !== 'id' && cell.id !== ''}
 											<Button variant="ghost" on:click={props.sort.toggle}>
 												<Render of={cell.render()} />
 												<ArrowUpDown
@@ -229,17 +191,7 @@
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
-										{#if cell.id === 'amount'}
-											<div class="text-right font-medium">
-												<Render of={cell.render()} />
-											</div>
-										{:else if cell.id === 'status'}
-											<div class="capitalize">
-												<Render of={cell.render()} />
-											</div>
-										{:else}
-											<Render of={cell.render()} />
-										{/if}
+										<Render of={cell.render()} />
 									</Table.Cell>
 								</Subscribe>
 							{/each}

@@ -4,7 +4,7 @@ import LinkController from '@/controllers/listController';
 
 export const ssr = false;
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async () => {
 	if (!(await AuthController.validate())) {
 		return;
 	}
