@@ -1,7 +1,7 @@
 import LinkController from "@/controllers/listController";
 import type { PageLoad } from "../$types";
 
-export const ssr = false;
+// export const ssr = false;
 
 export const load: PageLoad = async ({ params })  => {
 

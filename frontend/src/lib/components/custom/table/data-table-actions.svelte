@@ -14,14 +14,18 @@
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
+		<!-- TODO: fix delete and edit here and you're done! -->
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Actions</DropdownMenu.Label>
-			<DropdownMenu.Item on:click={() => navigator.clipboard.writeText(id)}>
-				Copy payment ID
+			<DropdownMenu.Item on:click={() => {navigator.clipboard.writeText(id); console.log(id)}}>
+				Edit
+			</DropdownMenu.Item>
+			<DropdownMenu.Item>
+				Delete
 			</DropdownMenu.Item>
 		</DropdownMenu.Group>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item>View customer</DropdownMenu.Item>
-		<DropdownMenu.Item>View payment details</DropdownMenu.Item>
+		<!-- <DropdownMenu.Item>View customer</DropdownMenu.Item>
+		<DropdownMenu.Item>View payment details</DropdownMenu.Item> -->
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
