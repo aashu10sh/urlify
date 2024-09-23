@@ -5,6 +5,10 @@ import { Result, ok, err } from 'neverthrow';
 class AuthController {
 	constructor() {}
 
+	static async logOut() {
+		localStorage.removeItem('session');
+	}
+
 	static async validate(): Promise<boolean> {
 		const session = localStorage.getItem('session');
 		return !!session;
@@ -64,36 +68,34 @@ class AuthController {
 		localStorage.setItem('session', token);
 	}
 
-	async fetchSelf(): Promise<IUser| null> {
-		try{
-			const response = await fetch(`${API_URL}/auth/self`,{
-				method:'GET',
+	async fetchSelf(): Promise<IUser|null> {
+		try {
+			const response = await fetch(`${API_URL}/auth/self`, {
+				method: 'GET',
 				headers: await this.getDefaultHeaders()
-			},);
-			if(!response.ok){
+			});
+			if (!response.ok) {
 				alert(response.text);
 			}
 			const jsonResponse = await response.json();
-			const jsonData = jsonResponse["data"]
+			const jsonData = jsonResponse['data'];
 			return {
-				name:jsonData["name"],
-				username: jsonData["username"],
-				createdAt: jsonData["createdAt"],
-				updatedAt: jsonData["updatedAt"]
-			} satisfies IUser
-		}
-		catch(error){
-			alert(error)
+				name: jsonData['name'],
+				username: jsonData['username'],
+				createdAt: jsonData['createdAt'],
+				updatedAt: jsonData['updatedAt']
+			} satisfies IUser;
+		} catch (error) {
+			alert(error);
 			return null;
 		}
 	}
 
-	async getDefaultHeaders(){
+	async getDefaultHeaders() {
 		return {
-			'Content-Type' : 'application/json',
-			'Authorization': `Bearer ${await this.fetchToken()}`
-		}
-
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${await this.fetchToken()}`
+		};
 	}
 
 	async fetchToken(): Promise<string> {

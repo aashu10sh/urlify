@@ -25,7 +25,6 @@
 		}
 	});
 
-
 	async function registerUser() {
 		const controller = new AuthController();
 		const registerResult = await controller.register(name, username, password);

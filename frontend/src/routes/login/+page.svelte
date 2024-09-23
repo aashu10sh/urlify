@@ -14,7 +14,6 @@
 	import AuthController from '@/controllers/authController';
 	import { toast } from 'svelte-sonner';
 
-	
 	let username: string = '';
 	let password: string = '';
 
@@ -28,12 +27,12 @@
 		const controller = new AuthController();
 		const loginResult = await controller.login(username, password);
 		loginResult.match(
-			async (token : string ) => {
+			async (token: string) => {
 				await controller.saveToken(token);
 				toast.success('Registered!, Redirecting!');
 				window.location.href = '/dashboard';
 			},
-			async (error : string ) => {
+			async (error: string) => {
 				toast.error('Login Failed!', {
 					description: error
 				});
