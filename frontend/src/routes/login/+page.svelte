@@ -14,6 +14,7 @@
 	import AuthController from '@/controllers/authController';
 	import { toast } from 'svelte-sonner';
 
+	
 	let username: string = '';
 	let password: string = '';
 

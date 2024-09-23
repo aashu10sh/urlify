@@ -1,7 +1,21 @@
 <script lang="ts">
 	import AuthController from '@/controllers/authController';
 	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+	import { toast } from 'svelte-sonner';
+
 	const controller = new AuthController();
+	export let data: PageData;
+	
+	
+	if(!data.user){
+		toast.error("Failed to Fetch User");
+		window.location.href = "/login";
+	}
+
+	const user = data.user!;
+
+
 	let token: string;
 
 	onMount(async () => {
@@ -10,8 +24,22 @@
 		}
 		token = await controller.fetchToken();
 	});
+	
 </script>
 
-<h1>
-	Hey You are {token}
-</h1>
+<div class="md:hidden">
+	<!-- <enhanced:img src={TasksLight} alt="Tasks" class="block dark:hidden" />
+	<enhanced:img src={TasksDark} alt="Tasks" class="hidden dark:block" /> -->
+</div>
+<div class="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+	<div class="flex items-center justify-between space-y-2">
+		<div>
+			<h2 class="text-2xl font-bold tracking-tight">Welcome back {user.name}!</h2>
+			<p class="text-muted-foreground">Here's a list of your tasks for this month!</p>
+		</div>
+		<div class="flex items-center space-x-2">
+			<!-- <UserNav /> -->
+		</div>
+	</div>
+	<!-- <DataTable {data} /> -->
+</div>

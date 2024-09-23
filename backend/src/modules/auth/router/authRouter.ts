@@ -61,10 +61,9 @@ authRouter.post("/valid", getCurrentUser, async (c) => {
 authRouter.get("/self", getCurrentUser, async (c) => {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const user : UserModel = c.get("user");
+  const user: UserModel = c.get("user");
   return c.json({
-    data:user
-  })
-
-})
+    data: user,
+  });
+});
 export default authRouter;
