@@ -1,7 +1,14 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
+    import type { PageData } from '../$types';
 
-    export let data : PageData;
+    export let data: PageData;
+
+    if(data.link){
+       window.location.href = data.link.originalUrl!; 
+    }
 </script>
 
-{data.slug}
+
+<h1 class="text-xl">
+    No such URL {data.slug}
+</h1>

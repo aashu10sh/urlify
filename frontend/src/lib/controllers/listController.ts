@@ -60,6 +60,7 @@ class LinkController {
         }
 
         const data = await response.json();
+        console.log(data)
         return { 
             id: data["id"],
             name: data["name"],
