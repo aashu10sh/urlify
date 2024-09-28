@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { error, redirect } from '@sveltejs/kit';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
