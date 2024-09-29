@@ -39,9 +39,8 @@ class LinkController {
     return await getLinksByUser(this.linkRepository, userId, offset, limit);
   }
 
-  async fetchLink( slug : string) : Promise<LinkModel|null>{
+  async fetchLink(slug: string): Promise<LinkModel | null> {
     return await getLinkBySlug(this.linkRepository, slug);
-    
   }
 }
 

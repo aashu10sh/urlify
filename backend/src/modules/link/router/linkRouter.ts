@@ -50,17 +50,15 @@ linkRouter.get("/", getCurrentUser, validateDefaultQueryParams, async (c) => {
   return c.json({ data: fetchLinksResult });
 });
 
-linkRouter.get('/:linkSlug', async (c) => {
-  const slug = c.req.param('linkSlug');
+linkRouter.get("/:linkSlug", async (c) => {
+  const slug = c.req.param("linkSlug");
   const link = await linkController.fetchLink(slug);
-  if(!link){
-    throw new HTTPException(
-      404,{
-        message:"No Such URL :("
-      }
-    )
+  if (!link) {
+    throw new HTTPException(404, {
+      message: "No Such URL :(",
+    });
   }
   return c.json(link);
-})
+});
 
 export default linkRouter;

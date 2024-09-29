@@ -40,6 +40,9 @@ model Links{
 
 model Hits{
   id Int @id @default(autoincrement())
+  userIp String
+  userAgent String
+  
   linkId Int 
   link Links @relation(fields: [linkId], references: [id])
   accessedAt DateTime @default(now())
