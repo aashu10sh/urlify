@@ -6,10 +6,15 @@ import linkCreationValidator from "../domain/entities/requests/createLinkRequest
 import { UserModel } from "../../core/domain/entities/user.model";
 import { HTTPException } from "hono/http-exception";
 import validateDefaultQueryParams from "../../core/domain/entities/requests/defaultQueryParams";
+import HitController from "../../hit/presentation/controllers/hitController";
+import HitRepository from "../../hit/domain/repositories/hitRepository";
+import { getConnInfo } from "@hono/node-server/conninfo";
 
 const linkRouter = new Hono();
 const linkRepository = new LinkRepository();
+const hitRepository = new HitRepository();
 const linkController = new LinkController(linkRepository);
+const hitController = new HitController(hitRepository);
 
 linkRouter.post("/", getCurrentUser, linkCreationValidator, async (c) => {
   // @ts-ignore
@@ -53,11 +58,16 @@ linkRouter.get("/", getCurrentUser, validateDefaultQueryParams, async (c) => {
 linkRouter.get("/:linkSlug", async (c) => {
   const slug = c.req.param("linkSlug");
   const link = await linkController.fetchLink(slug);
+
   if (!link) {
     throw new HTTPException(404, {
       message: "No Such URL :(",
     });
   }
+  const connectionInfo = getConnInfo(c);
+  const ipAddress = connectionInfo.remote.address || "x.x.x.x";
+  const userAgent = c.req.header("User-Agent") || "This-Cannot-Be";
+  await hitController.createHit(ipAddress, userAgent, link.id!);
   return c.json(link);
 });
 

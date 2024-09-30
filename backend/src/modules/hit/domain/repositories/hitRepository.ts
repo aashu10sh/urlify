@@ -11,7 +11,7 @@ class HitRepository implements Repository<HitModel> {
       },
     });
 
-    return created as HitModel;
+    return created satisfies HitModel;
   }
 
   async delete(instance: HitModel): Promise<HitModel> {
@@ -46,4 +46,4 @@ class HitRepository implements Repository<HitModel> {
   }
 }
 
-export default HitRepository
+export default HitRepository;
