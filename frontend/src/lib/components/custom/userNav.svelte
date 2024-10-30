@@ -4,23 +4,29 @@
 	import Button from '../ui/button/button.svelte';
 	import * as DropdownMenu from '../ui/dropdown-menu';
 	import AuthController from '@/controllers/authController';
-	export let user: IUser;
+	interface Props {
+		user: IUser;
+	}
+
+	let { user }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder>
-		<Button variant="ghost" builders={[builder]} class="relative h-8 w-8 rounded-full">
-			<Avatar.Root class="h-9 w-9">
-				<Avatar.Image src={`https://robohash.org/${user.username}`} alt="" />
-				<Avatar.Fallback
-					>{user.name
-						.split(' ')
-						.map((n) => n[0])
-						.join('')}</Avatar.Fallback
-				>
-			</Avatar.Root>
-		</Button>
-	</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger asChild >
+		{#snippet children({ builder })}
+				<Button variant="ghost" builders={[builder]} class="relative h-8 w-8 rounded-full">
+				<Avatar.Root class="h-9 w-9">
+					<Avatar.Image src={`https://robohash.org/${user.username}`} alt="" />
+					<Avatar.Fallback
+						>{user.name
+							.split(' ')
+							.map((n) => n[0])
+							.join('')}</Avatar.Fallback
+					>
+				</Avatar.Root>
+			</Button>
+					{/snippet}
+		</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56" align="end">
 		<DropdownMenu.Label class="font-normal">
 			<div class="flex flex-col space-y-1">

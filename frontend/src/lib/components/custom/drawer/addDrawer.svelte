@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run, preventDefault } from 'svelte/legacy';
+
 	import { mediaQuery } from 'svelte-legos';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
@@ -9,12 +11,15 @@
 	import AuthController from '@/controllers/authController';
 	import LinkController from '@/controllers/listController';
 	import { toast } from 'svelte-sonner';
-	let open = false;
+	let open = $state(false);
 	const isDesktop = mediaQuery('(min-width: 768px)');
-	let name: string = '';
-	let originalUrl: string = '';
-	let slug: string = '';
-	$: finalUrl = `http://localhost:5173/${slug}`;
+	let name: string = $state('');
+	let originalUrl: string = $state('');
+	let slug: string = $state('');
+	let finalUrl : string  = $state("");
+	run(() => {
+		finalUrl = `http://localhost:5173/${slug}`;
+	});
 	async function addLink() {
 		const authController = new AuthController();
 		const linkController = new LinkController(authController);
@@ -34,11 +39,13 @@
 
 {#if $isDesktop}
 	<Dialog.Root bind:open>
-		<Dialog.Trigger asChild let:builder>
-			<Button variant="outline" class="w-40" builders={[builder]}>
-				<CirclePlusIcon class="mr-2 h-4 w-4" /> Add Link</Button
-			>
-		</Dialog.Trigger>
+		<Dialog.Trigger asChild >
+			{#snippet children({ builder })}
+						<Button variant="outline" class="w-40" builders={[builder]}>
+					<CirclePlusIcon class="mr-2 h-4 w-4" /> Add Link</Button
+				>
+								{/snippet}
+				</Dialog.Trigger>
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
 				<Dialog.Title>Add a new Link</Dialog.Title>
@@ -46,7 +53,7 @@
 					Create a new link here. Click save when you're done.
 				</Dialog.Description>
 			</Dialog.Header>
-			<form class="grid items-start gap-4" on:submit|preventDefault={addLink}>
+			<form class="grid items-start gap-4" onsubmit={preventDefault(addLink)}>
 				<div class="grid gap-2">
 					<Label for="name">Name</Label>
 					<Input type="text" id="name" bind:value={name} />
@@ -69,9 +76,11 @@
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger asChild let:builder>
-			<Button variant="outline" builders={[builder]}>Edit Profile</Button>
-		</Drawer.Trigger>
+		<Drawer.Trigger asChild >
+			{#snippet children({ builder })}
+						<Button variant="outline" builders={[builder]}>Edit Profile</Button>
+								{/snippet}
+				</Drawer.Trigger>
 		<Drawer.Content>
 			<Drawer.Header class="text-left">
 				<Drawer.Title>Edit profile</Drawer.Title>
@@ -92,9 +101,11 @@
 				<Button type="submit">Save changes</Button>
 			</form>
 			<Drawer.Footer class="pt-2">
-				<Drawer.Close asChild let:builder>
-					<Button variant="outline" builders={[builder]}>Cancel</Button>
-				</Drawer.Close>
+				<Drawer.Close asChild >
+					{#snippet children({ builder })}
+										<Button variant="outline" builders={[builder]}>Cancel</Button>
+														{/snippet}
+								</Drawer.Close>
 			</Drawer.Footer>
 		</Drawer.Content>
 	</Drawer.Root>

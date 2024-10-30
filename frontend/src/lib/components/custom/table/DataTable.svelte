@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
 
 	import {
@@ -21,7 +23,11 @@
 	import { cn } from '$lib/utils.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 
-    export let data : ILink[];
+	interface Props {
+		data: ILink[];
+	}
+
+	let { data }: Props = $props();
 
 	interface ILink {
 		id: number;
@@ -121,11 +127,13 @@
 
 	const { hiddenColumnIds } = pluginStates.hide;
 	const ids = flatColumns.map((c) => c.id);
-	let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
+	let hideForId = $state(Object.fromEntries(ids.map((id) => [id, true])));
 
-	$: $hiddenColumnIds = Object.entries(hideForId)
-		.filter(([, hide]) => !hide)
-		.map(([id]) => id);
+	run(() => {
+		$hiddenColumnIds = Object.entries(hideForId)
+			.filter(([, hide]) => !hide)
+			.map(([id]) => id);
+	});
 
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	const { filterValue } = pluginStates.filter;
@@ -139,11 +147,13 @@
 	<div class="flex items-center py-4">
 		<Input class="max-w-sm" placeholder="Filter links..." type="text" bind:value={$filterValue} />
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger asChild let:builder>
-				<Button variant="outline" class="ml-auto" builders={[builder]}>
-					Columns <ChevronDown class="ml-2 h-4 w-4" />
-				</Button>
-			</DropdownMenu.Trigger>
+			<DropdownMenu.Trigger asChild >
+				{#snippet children({ builder })}
+								<Button variant="outline" class="ml-auto" builders={[builder]}>
+						Columns <ChevronDown class="ml-2 h-4 w-4" />
+					</Button>
+											{/snippet}
+						</DropdownMenu.Trigger>
 			<DropdownMenu.Content>
 				{#each flatColumns as col}
 					{#if hideableCols.includes(col.id)}
@@ -162,23 +172,25 @@
 					<Subscribe rowAttrs={headerRow.attrs()}>
 						<Table.Row>
 							{#each headerRow.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
-									<Table.Head {...attrs} class={cn('[&:has([role=checkbox])]:pl-3')}>
-										{#if cell.id !== 'id' && cell.id !== ''}
-											<Button variant="ghost" on:click={props.sort.toggle}>
+								<Subscribe attrs={cell.attrs()}  props={cell.props()} >
+									{#snippet children({ attrs, props })}
+																		<Table.Head {...attrs} class={cn('[&:has([role=checkbox])]:pl-3')}>
+											{#if cell.id !== 'id' && cell.id !== ''}
+												<Button variant="ghost" on:click={props.sort.toggle}>
+													<Render of={cell.render()} />
+													<ArrowUpDown
+														class={cn(
+															$sortKeys[0]?.id === cell.id && 'text-foreground',
+															'ml-2 h-4 w-4'
+														)}
+													/>
+												</Button>
+											{:else}
 												<Render of={cell.render()} />
-												<ArrowUpDown
-													class={cn(
-														$sortKeys[0]?.id === cell.id && 'text-foreground',
-														'ml-2 h-4 w-4'
-													)}
-												/>
-											</Button>
-										{:else}
-											<Render of={cell.render()} />
-										{/if}
-									</Table.Head>
-								</Subscribe>
+											{/if}
+										</Table.Head>
+																										{/snippet}
+																</Subscribe>
 							{/each}
 						</Table.Row>
 					</Subscribe>
@@ -186,17 +198,21 @@
 			</Table.Header>
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
-					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'}>
-							{#each row.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} let:attrs>
-									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
-										<Render of={cell.render()} />
-									</Table.Cell>
-								</Subscribe>
-							{/each}
-						</Table.Row>
-					</Subscribe>
+					<Subscribe rowAttrs={row.attrs()} >
+						{#snippet children({ rowAttrs })}
+												<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'}>
+								{#each row.cells as cell (cell.id)}
+									<Subscribe attrs={cell.attrs()} >
+										{#snippet children({ attrs })}
+																		<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
+												<Render of={cell.render()} />
+											</Table.Cell>
+																											{/snippet}
+																</Subscribe>
+								{/each}
+							</Table.Row>
+																	{/snippet}
+										</Subscribe>
 				{/each}
 			</Table.Body>
 		</Table.Root>

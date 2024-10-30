@@ -3,16 +3,22 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 
-	export let id: string;
+	interface Props {
+		id: string;
+	}
+
+	let { id }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger asChild let:builder>
-		<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
-			<span class="sr-only">Open menu</span>
-			<Ellipsis class="h-4 w-4" />
-		</Button>
-	</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger asChild >
+		{#snippet children({ builder })}
+				<Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
+				<span class="sr-only">Open menu</span>
+				<Ellipsis class="h-4 w-4" />
+			</Button>
+					{/snippet}
+		</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<!-- TODO: fix delete and edit here and you're done! -->
 		<DropdownMenu.Group>

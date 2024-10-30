@@ -8,10 +8,10 @@
 		<div aria-hidden="true" class="absolute -top-96 start-1/2 flex -translate-x-1/2 transform">
 			<div
 				class="h-[44rem] w-[25rem] -translate-x-[10rem] rotate-[-60deg] transform bg-gradient-to-r from-background/50 to-background blur-3xl"
-			/>
+			></div>
 			<div
 				class="h-[50rem] w-[90rem] origin-top-left -translate-x-[15rem] -rotate-12 rounded-full bg-gradient-to-tl from-primary-foreground via-primary-foreground to-background blur-3xl"
-			/>
+			></div>
 		</div>
 		<div class="relative z-10">
 			<div class="container py-10 lg:py-16">

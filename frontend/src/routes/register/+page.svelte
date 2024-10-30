@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { Button } from '@/components/ui/button';
 	import { toast } from 'svelte-sonner';
 	import {
@@ -14,9 +16,9 @@
 	import AuthController from '@/controllers/authController';
 	import { onMount } from 'svelte';
 
-	let username: string = '';
-	let name: string = '';
-	let password: string = '';
+	let username: string = $state('');
+	let name: string = $state('');
+	let password: string = $state('');
 
 	onMount(async () => {
 		const hasSession = await AuthController.validate();
@@ -52,7 +54,7 @@
 </svelte:head>
 
 <main>
-	<form on:submit|preventDefault={registerUser}>
+	<form onsubmit={preventDefault(registerUser)}>
 		<div class="flex min-h-screen items-center justify-center bg-background">
 			<Card class="w-full max-w-sm">
 				<CardHeader>

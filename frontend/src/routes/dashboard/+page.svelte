@@ -8,7 +8,11 @@
 	import DataTable from '@/components/custom/table/DataTable.svelte';
 
 	const controller = new AuthController();
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	if (!data.user) {
 		toast.error('Failed to Fetch User');
